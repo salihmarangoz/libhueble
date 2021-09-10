@@ -8,6 +8,8 @@ CHAR_MODEL = '00002a24-0000-1000-8000-00805f9b34fb'
 CHAR_POWER = '932c32bd-0002-47a2-835a-a8d455b859dd'
 # brightness (1 to 254)
 CHAR_BRIGHTNESS = '932c32bd-0003-47a2-835a-a8d455b859dd'
+# temperature (153 to 454)
+CHAR_TEMPERATURE = '932c32bd-0004-47a2-835a-a8d455b859dd'
 # color (CIE XY coordinates converted to two 16-bit little-endian integers)
 CHAR_COLOR = '932c32bd-0005-47a2-835a-a8d455b859dd'
 
@@ -58,7 +60,18 @@ class Lamp(object):
 
     async def set_brightness(self, brightness):
         """Sets the brightness from a float between 0.0 and 1.0"""
-        await self.client.write_gatt_char(CHAR_BRIGHTNESS, bytes([max(min(int(brightness * 255), 254), 1)]), response=True)
+        await self.client.write_gatt_char(CHAR_BRIGHTNESS, bytes([max(min(int(round(brightness * 255)), 254), 1)]), response=True)
+
+    async def get_temperature(self):
+        """Gets the current color temperature as a float between 0.0 and 1.0"""
+        temperature = await self.client.read_gatt_char(CHAR_TEMPERATURE)
+        return ((temperature[1] << 8 | temperature[0]) - 153) / 301
+
+    async def set_temperature(self, temperature):
+        """Sets the color temperature from a float between 0.0 and 1.0"""
+        temperature = max(temperature, 0)
+        temperature = min(int(round(temperature * 301)) + 153, 454)
+        await self.client.write_gatt_char(CHAR_TEMPERATURE, bytes([temperature & 0xFF, temperature >> 8]), response=True)
 
     async def get_color_xy(self):
         """Gets the current XY color coordinates as floats between 0.0 and 1.0"""
