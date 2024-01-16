@@ -36,6 +36,13 @@ finally:
    await lamp.disconnect()
 ```
 
+## Usage (Wake-up Routine)
+
+- Set the parameters in the `examples/wake_up.py` script.
+- Add the script to the "Startup Applications".
+
+![startup_configuration](startup_configuration.png)
+
 ## Compatibility
 
 Works on Raspbian Buster.
