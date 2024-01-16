@@ -43,6 +43,20 @@ finally:
 
 ![startup_configuration](startup_configuration.png)
 
+## Usage (GUI)
+
+![hue_gui](examples/pyside_app/hue_gui.png)
+
+```bash
+# Add to .bashrc, maybe...
+function hue_gui()
+{
+    (cd "/home/salih/Github/libhueble/examples/pyside_app"; python "/home/salih/Github/libhueble/examples/pyside_app/my_app.py")
+}
+```
+
+
+
 ## Compatibility
 
 Works on Raspbian Buster.
