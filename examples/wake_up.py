@@ -9,7 +9,7 @@ FINAL_BRIGHTNESS = 1.0
 START_TEMPERATURE = 1.0
 FINAL_TEMPERATURE = 0.5
 TIME_STEP = 1.0  # seconds. do not go below 0.5
-NUM_TIME_STEPS = 60*15 # finish the transition in 15 mins
+NUM_TIME_STEPS = 60*30 # finish the transition in 30 mins
 
 async def wake_up_scenario():
     lamp = libhueble.Lamp(BLUETOOTH_ADDRESS)
@@ -46,6 +46,6 @@ def job_function():
 
 scheduler = BlockingScheduler()
 #scheduler.add_job(job_function, 'cron', second=0) # For testing
-scheduler.add_job(job_function, 'cron', hour=7, minute=30)
+scheduler.add_job(job_function, 'cron', hour=7, minute=00)
 scheduler.start()
 scheduler.shutdown(wait=True)
