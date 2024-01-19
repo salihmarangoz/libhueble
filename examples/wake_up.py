@@ -22,13 +22,13 @@ async def wake_up_scenario():
 
     # Interpolate from start to final brightness and temperature
     is_power_on = False
-    try:
-        for t in range(NUM_TIME_STEPS+1):
+    for t in range(NUM_TIME_STEPS+1):
+        try:
             timestamp = time.time()
             current_time = t / NUM_TIME_STEPS
             current_brightness = (FINAL_BRIGHTNESS-START_BRIGHTNESS)*current_time + START_BRIGHTNESS
             current_temperature = (FINAL_TEMPERATURE-START_TEMPERATURE)*current_time + START_TEMPERATURE
-            #print(current_brightness, current_temperature)
+            print(current_time, current_brightness, current_temperature)
 
             await lamp.set_brightness(current_brightness)
             await lamp.set_temperature(current_temperature)
@@ -38,8 +38,12 @@ async def wake_up_scenario():
             timediff = time.time() - timestamp
             if TIME_STEP - timediff > 0:
                 await asyncio.sleep(TIME_STEP - timediff)
-    finally:
-        await lamp.disconnect()
+        except:
+            print("Reconnecting...")
+            await lamp.connect()
+            await asyncio.sleep(1.0)
+
+    await lamp.disconnect()
 
 def job_function():
     asyncio.run(wake_up_scenario())
